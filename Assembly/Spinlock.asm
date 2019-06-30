@@ -2,6 +2,7 @@
 ; Implementing a spinlock in x64 assembly.
 ;
 ; Implements mutual exclusion in a couple different ways so we can compare performance:
+;	- DoWorkUnsafe is the naive, non-thread safe version, hopefully giving us some data races
 ;	- DoWorkLocked just uses the atomic increment instruction in raw form
 ;	- DoWorkSpin implements a spinlock via a mutex
 
@@ -26,7 +27,7 @@ SpinlockASM proc
 	mov r9, rcx           ; move *i to r9
 	mov rcx, 0            ; security attributes
 	mov rdx, 0            ; use same stack size as calling thread
-	mov r8, DoWorkLocked  ; creation routine 
+	mov r8, DoWorkUnsafe  
 
 	call CreateThread
 
@@ -35,6 +36,22 @@ SpinlockASM proc
 
 	ret 
 SpinlockASM endp
+
+; thread execution function
+; increment shared variable in unsafe manner
+DoWorkUnsafe proc
+	xor edx, edx 
+	mov rax, 10000              ; each thread loops N times
+WorkLoop:
+	mov edx, dword ptr [rcx]    ; fetch data
+	inc edx                     ; increment 
+	mov  dword ptr [rcx], edx   ; store data 
+
+	dec rax
+	jnz WorkLoop
+
+	ret 
+DoWorkUnsafe endp
 
 ; thread execution function
 ; increment shared variable with interlocked instruction 
