@@ -13,14 +13,16 @@
 
 void ModuleConvention();
 void ModuleSpinlock();
+void ModuleLoadEffectiveAddr();
 
 /* ----------------------------------------------------------------------------
 	Externally Defined in x64 Modules (Called by C++ Module Entries)
 */
 
 // Convention.asm 
-extern "C" int ConventionASM();
-extern "C" HANDLE SpinlockASM(int *i);
+extern "C" int     ConventionASM();
+extern "C" HANDLE  SpinlockASM(int *i);
+extern "C" DWORD64 LoadEffectiveAddrASM();
 
 /* ----------------------------------------------------------------------------
 	Entry Point
@@ -31,7 +33,8 @@ int main()
 	// Swap out call here to run different programs
 
 	//ModuleConvention();
-	ModuleSpinlock();
+	//ModuleSpinlock();
+	ModuleLoadEffectiveAddr();
 
 	return 0;
 }
@@ -64,6 +67,12 @@ void ModuleSpinlock()
 
 	std::cout << "GOT RESULT: " << count << std::endl;
 	std::cout << "DURATION: " << (finishTime - startTime) << " MS" << std::endl;
+}
+
+void ModuleLoadEffectiveAddr()
+{
+	DWORD64 ret = LoadEffectiveAddrASM();
+	std::cout << "GOT RETURN: " << ret << std::endl;
 }
 
 /* ----------------------------------------------------------------------------

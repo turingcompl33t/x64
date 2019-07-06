@@ -20,13 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="Convention.asm">
-      <Filter>Source Files</Filter>
-    </MASM>
-    <MASM Include="Spinlock.asm">
-      <Filter>Source Files</Filter>
-    </MASM>
-    <MASM Include="LoadEffectiveAddr.asm">
+    <MASM Include="Module.asm">
       <Filter>Source Files</Filter>
     </MASM>
   </ItemGroup>
